@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <ps5Controller.h>
+#include <ESP32Servo.h>
 
 // ピン配置をまとめて定義
 #define wheel_motor1_pwm 32
@@ -13,8 +14,8 @@
 #define photo_sensor_3 15
 #define bno055_sda 21
 #define bno055_scl 22
-#define servo1 17
-#define servo2 16
+#define arm_servo1 17
+#define arm_servo2 16
 #define belt_motor_1 19
 #define belt_motor_2 18
 #define switch 23
@@ -25,6 +26,13 @@
 #define WHEEL_PWM_CHANNEL_2 2
 #define WHEEL_PWM_FREQ 20000
 #define WHEEL_PWM_RESOLUTION 8
+
+//アームのサーボの設定
+Servo servo1;
+Servo servo2;
+// サーボのパルス幅
+#define servoMinUs 500
+#define servoMaxUs 2400
 
 void move(int8_t x, int8_t y) {
   // 1:右前輪, 2:左前輪, 3:後輪
@@ -50,6 +58,13 @@ void setup() {
   ledcAttachPin(wheel_motor1_pwm, WHEEL_PWM_CHANNEL_0);
   ledcAttachPin(wheel_motor2_pwm, WHEEL_PWM_CHANNEL_1);
   ledcAttachPin(wheel_motor3_pwm, WHEEL_PWM_CHANNEL_2);
+
+  // アームのサーボの設定
+  Serial.println("Setting up servos...");
+  servo1.setPeriodHertz(50);
+  servo2.setPeriodHertz(50);
+  servo1.attach(arm_servo1, servoMinUs, servoMaxUs);
+  servo2.attach(arm_servo2, servoMinUs, servoMaxUs);
 
   // PS5コントローラーの設定
   Serial.println("Setting up PS5 controller...");
