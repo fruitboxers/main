@@ -24,7 +24,14 @@
 #define WHEEL_PWM_CHANNEL_1 1
 #define WHEEL_PWM_CHANNEL_2 2
 #define WHEEL_PWM_FREQ 20000
-#define WHEEL_PWM_RESOLUTION 8  
+#define WHEEL_PWM_RESOLUTION 8
+
+void move(int8_t x, int8_t y) {
+  // 1:右前輪, 2:左前輪, 3:後輪
+  int8_t wheel1_speed = -1/2 * x + sqrt(3)/2 * y;
+  int8_t wheel2_speed = -1/2 * x - sqrt(3)/2 * y;
+  int8_t wheel3_speed = x;
+}
 
 void setup() {
   Serial.begin(115200);
@@ -47,10 +54,12 @@ void setup() {
   // PS5コントローラーの設定
   Serial.println("Setting up PS5 controller...");
   ps5.begin("e8:47:3a:8d:36:9a");
+
+  Serial.println("Setup complete.");
 }
 
 void loop() {
   while (ps5.isConnected() == true) {
-    
+    move(ps5.LStickX(), ps5.LStickY());
   }
 }
