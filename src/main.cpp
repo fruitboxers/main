@@ -8,6 +8,8 @@ ArmController armController;
 
 void setup() {
   Serial.begin(115200);
+  // 子機との通信用
+  Serial2.begin(115200);
 
   // 足回りの設定
   Serial.println("Setting up wheel motors...");
@@ -27,5 +29,12 @@ void setup() {
 void loop() {
   while (ps5.isConnected() == true) {
     driveController.drive(ps5.LStickX() * 2, ps5.LStickY() * 2);
+
+    if (ps5.L1()) {
+      Serial2.println("rotate_box_motor1");
+    }
+    if (ps5.R1()) {
+      Serial2.println("rotate_box_motor2");
+    }
   }
 }
