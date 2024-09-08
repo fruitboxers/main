@@ -21,24 +21,45 @@
 #define switch 23
 
 // 足回りのPWM設定
-#define WHEEL_PWM_CHANNEL_0 0
-#define WHEEL_PWM_CHANNEL_1 1
-#define WHEEL_PWM_CHANNEL_2 2
+#define WHEEL_PWM_CHANNEL_0 6
+#define WHEEL_PWM_CHANNEL_1 7
+#define WHEEL_PWM_CHANNEL_2 8
 #define WHEEL_PWM_FREQ 20000
 #define WHEEL_PWM_RESOLUTION 8
 
-//アームのサーボの設定
+// アームのサーボの設定
+// PWMチャンネル0,1を使用中
 Servo servo1;
 Servo servo2;
 // サーボのパルス幅
 #define servoMinUs 500
 #define servoMaxUs 2400
 
-void move(int8_t x, int8_t y) {
+// x,y: -256~256
+void move(int x, int y) {
+  Serial.print("x: ");
+  Serial.print(x);
+  Serial.print(", y: ");
+  Serial.println(y);
+
   // 1:右前輪, 2:左前輪, 3:後輪
-  int8_t wheel1_speed = -1/2 * x + sqrt(3)/2 * y;
-  int8_t wheel2_speed = -1/2 * x - sqrt(3)/2 * y;
-  int8_t wheel3_speed = x;
+  int wheel1_speed = (-0.5 * x) + (0.86602540378 * y);
+  int wheel2_speed = (-0.5 * x) - (0.86602540378 * y);
+  int wheel3_speed = x;
+
+  digitalWrite(wheel_motor1_dir, wheel1_speed > 0 ? HIGH : LOW);
+  digitalWrite(wheel_motor2_dir, wheel2_speed > 0 ? HIGH : LOW);
+  digitalWrite(wheel_motor3_dir, wheel3_speed > 0 ? HIGH : LOW);
+  ledcWrite(WHEEL_PWM_CHANNEL_0, abs(wheel1_speed));
+  ledcWrite(WHEEL_PWM_CHANNEL_1, abs(wheel2_speed));
+  ledcWrite(WHEEL_PWM_CHANNEL_2, abs(wheel3_speed));
+
+  Serial.print("wheel1_speed: ");
+  Serial.print(wheel1_speed);
+  Serial.print(", wheel2_speed: ");
+  Serial.print(wheel2_speed);
+  Serial.print(", wheel3_speed: ");
+  Serial.println(wheel3_speed);
 }
 
 void setup() {
@@ -75,6 +96,6 @@ void setup() {
 
 void loop() {
   while (ps5.isConnected() == true) {
-    move(ps5.LStickX(), ps5.LStickY());
+    move(ps5.LStickX() * 2, ps5.LStickY() * 2);
   }
 }
