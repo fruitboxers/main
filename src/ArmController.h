@@ -5,11 +5,15 @@
 #include <ESP32Servo.h>
 #include "pins.h"
 
-// サーボのパルス幅
-#define servoMinUs 500
-#define servoMaxUs 2400
-
 class ArmController {
+private:
+  Servo servo1;
+  Servo servo2;
+  // パルス幅の最小値
+  static constexpr int servoMinUs = 500;
+  // パルス幅の最大値
+  static constexpr int servoMaxUs = 2400;
+
 public:
   ArmController();
   void setup();

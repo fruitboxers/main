@@ -4,14 +4,14 @@
 #include <Arduino.h>
 #include "pins.h"
 
-// 足回りのPWM設定
-#define WHEEL_PWM_CHANNEL_1 6
-#define WHEEL_PWM_CHANNEL_2 7
-#define WHEEL_PWM_CHANNEL_3 8
-#define WHEEL_PWM_FREQ 20000
-#define WHEEL_PWM_RESOLUTION 8
-
 class DriveController {
+private:
+  static constexpr int pwmChannel1 = 6;
+  static constexpr int pwmChannel2 = 7;
+  static constexpr int pwmChannel3 = 8;
+  static constexpr int pwmFreq = 20000;
+  static constexpr int pwmResolution = 8;
+
 public:
   DriveController();
   void setup();

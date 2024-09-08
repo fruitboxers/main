@@ -1,9 +1,5 @@
 #include "ArmController.h"
 
-// PWMチャンネル0,1を使用中
-Servo servo1;
-Servo servo2;
-
 ArmController::ArmController() {
 }
 

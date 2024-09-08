@@ -11,12 +11,12 @@ void DriveController::setup() {
   pinMode(WHEEL_MOTOR3_PWM_PIN, OUTPUT);
   pinMode(WHEEL_MOTOR3_DIR_PIN, OUTPUT);
 
-  ledcSetup(WHEEL_PWM_CHANNEL_1, WHEEL_PWM_FREQ, WHEEL_PWM_RESOLUTION);
-  ledcSetup(WHEEL_PWM_CHANNEL_2, WHEEL_PWM_FREQ, WHEEL_PWM_RESOLUTION);
-  ledcSetup(WHEEL_PWM_CHANNEL_3, WHEEL_PWM_FREQ, WHEEL_PWM_RESOLUTION);
-  ledcAttachPin(WHEEL_MOTOR1_PWM_PIN, WHEEL_PWM_CHANNEL_1);
-  ledcAttachPin(WHEEL_MOTOR2_PWM_PIN, WHEEL_PWM_CHANNEL_2);
-  ledcAttachPin(WHEEL_MOTOR3_PWM_PIN, WHEEL_PWM_CHANNEL_3);
+  ledcSetup(pwmChannel1, pwmFreq, pwmResolution);
+  ledcSetup(pwmChannel2, pwmFreq, pwmResolution);
+  ledcSetup(pwmChannel3, pwmFreq, pwmResolution);
+  ledcAttachPin(WHEEL_MOTOR1_PWM_PIN, pwmChannel1);
+  ledcAttachPin(WHEEL_MOTOR2_PWM_PIN, pwmChannel2);
+  ledcAttachPin(WHEEL_MOTOR3_PWM_PIN, pwmChannel3);
 }
 
 void DriveController::drive(int x, int y) {
@@ -33,9 +33,9 @@ void DriveController::drive(int x, int y) {
   digitalWrite(WHEEL_MOTOR1_DIR_PIN, wheel1_speed > 0 ? HIGH : LOW);
   digitalWrite(WHEEL_MOTOR2_DIR_PIN, wheel2_speed > 0 ? HIGH : LOW);
   digitalWrite(WHEEL_MOTOR3_DIR_PIN, wheel3_speed > 0 ? HIGH : LOW);
-  ledcWrite(WHEEL_PWM_CHANNEL_1, abs(wheel1_speed));
-  ledcWrite(WHEEL_PWM_CHANNEL_2, abs(wheel2_speed));
-  ledcWrite(WHEEL_PWM_CHANNEL_3, abs(wheel3_speed));
+  ledcWrite(pwmChannel1, abs(wheel1_speed));
+  ledcWrite(pwmChannel2, abs(wheel2_speed));
+  ledcWrite(pwmChannel3, abs(wheel3_speed));
 
   Serial.print("wheel1_speed: ");
   Serial.print(wheel1_speed);
