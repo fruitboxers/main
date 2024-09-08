@@ -21,9 +21,9 @@
 #define switch 23
 
 // 足回りのPWM設定
-#define WHEEL_PWM_CHANNEL_0 6
-#define WHEEL_PWM_CHANNEL_1 7
-#define WHEEL_PWM_CHANNEL_2 8
+#define WHEEL_PWM_CHANNEL_1 6
+#define WHEEL_PWM_CHANNEL_2 7
+#define WHEEL_PWM_CHANNEL_3 8
 #define WHEEL_PWM_FREQ 20000
 #define WHEEL_PWM_RESOLUTION 8
 
@@ -50,9 +50,9 @@ void move(int x, int y) {
   digitalWrite(wheel_motor1_dir, wheel1_speed > 0 ? HIGH : LOW);
   digitalWrite(wheel_motor2_dir, wheel2_speed > 0 ? HIGH : LOW);
   digitalWrite(wheel_motor3_dir, wheel3_speed > 0 ? HIGH : LOW);
-  ledcWrite(WHEEL_PWM_CHANNEL_0, abs(wheel1_speed));
-  ledcWrite(WHEEL_PWM_CHANNEL_1, abs(wheel2_speed));
-  ledcWrite(WHEEL_PWM_CHANNEL_2, abs(wheel3_speed));
+  ledcWrite(WHEEL_PWM_CHANNEL_1, abs(wheel1_speed));
+  ledcWrite(WHEEL_PWM_CHANNEL_2, abs(wheel2_speed));
+  ledcWrite(WHEEL_PWM_CHANNEL_3, abs(wheel3_speed));
 
   Serial.print("wheel1_speed: ");
   Serial.print(wheel1_speed);
@@ -73,12 +73,12 @@ void setup() {
   pinMode(wheel_motor2_dir, OUTPUT);
   pinMode(wheel_motor3_pwm, OUTPUT);
   pinMode(wheel_motor3_dir, OUTPUT);
-  ledcSetup(WHEEL_PWM_CHANNEL_0, WHEEL_PWM_FREQ, WHEEL_PWM_RESOLUTION);
   ledcSetup(WHEEL_PWM_CHANNEL_1, WHEEL_PWM_FREQ, WHEEL_PWM_RESOLUTION);
   ledcSetup(WHEEL_PWM_CHANNEL_2, WHEEL_PWM_FREQ, WHEEL_PWM_RESOLUTION);
-  ledcAttachPin(wheel_motor1_pwm, WHEEL_PWM_CHANNEL_0);
-  ledcAttachPin(wheel_motor2_pwm, WHEEL_PWM_CHANNEL_1);
-  ledcAttachPin(wheel_motor3_pwm, WHEEL_PWM_CHANNEL_2);
+  ledcSetup(WHEEL_PWM_CHANNEL_3, WHEEL_PWM_FREQ, WHEEL_PWM_RESOLUTION);
+  ledcAttachPin(wheel_motor1_pwm, WHEEL_PWM_CHANNEL_1);
+  ledcAttachPin(wheel_motor2_pwm, WHEEL_PWM_CHANNEL_2);
+  ledcAttachPin(wheel_motor3_pwm, WHEEL_PWM_CHANNEL_3);
 
   // アームのサーボの設定
   Serial.println("Setting up servos...");
