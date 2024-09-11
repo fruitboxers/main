@@ -49,7 +49,4 @@ void loop() {
       Serial2.println("rotate_box_motor2");
     }
   }
-
-  // 安全のため、PS5コントローラーが切断されたらスピードを0にする
-  driveController.drive(0, 0);
 }
