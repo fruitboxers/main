@@ -1,10 +1,11 @@
 #include <Arduino.h>
-#include <ps5Controller.h>
 #include "DriveController.h"
 #include "ArmController.h"
+#include "InputController.h"
 
 DriveController driveController;
 ArmController armController;
+InputController inputController;
 
 void setup() {
   Serial.begin(115200);
@@ -21,7 +22,7 @@ void setup() {
 
   // PS5コントローラーの設定
   Serial.println("Setting up PS5 controller...");
-  ps5.begin("e8:47:3a:8d:36:9a");
+  inputController.setup();
 
   Serial.println("Setup complete.");
 }
@@ -33,7 +34,13 @@ void loop() {
   }
 
   while (ps5.isConnected() == true) {
-    driveController.drive(ps5.LStickX() * 2, ps5.LStickY() * 2);
+    int rStickX = inputController.roundedRStickX();
+    double gain = 0.1;
+    driveController.changeTargetAngle(rStickX * gain);
+
+    int lStickX = inputController.roundedLStickX();
+    int lStickY = inputController.roundedLStickY();
+    driveController.drive(lStickX * 2, lStickY * 2);
 
     if (ps5.L1()) {
       Serial2.println("rotate_box_motor1");
@@ -44,5 +51,6 @@ void loop() {
   }
 
   // 安全のため、PS5コントローラーが切断されたらモーターを停止
+  // TODO: BNO055による補正は働き続けてしまうため、修正が必要
   driveController.drive(0, 0);
 }
