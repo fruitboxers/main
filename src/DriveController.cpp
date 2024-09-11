@@ -73,7 +73,6 @@ void DriveController::drive(int x, int y) {
 
 double DriveController::getAngle() {
   imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
-  // TODO: x軸でいいのか確認
   return euler.x();
 }
 
