@@ -27,6 +27,11 @@ void setup() {
 }
 
 void loop() {
+  while (ps5.isConnected() == false) {
+    Serial.println("PS5 controller not found");
+    delay(300);
+  }
+
   while (ps5.isConnected() == true) {
     driveController.drive(ps5.LStickX() * 2, ps5.LStickY() * 2);
 
@@ -37,4 +42,7 @@ void loop() {
       Serial2.println("rotate_box_motor2");
     }
   }
+
+  // 安全のため、PS5コントローラーが切断されたらモーターを停止
+  driveController.drive(0, 0);
 }
