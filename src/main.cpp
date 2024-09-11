@@ -35,7 +35,7 @@ void loop() {
 
   while (ps5.isConnected() == true) {
     int rStickX = inputController.roundedRStickX();
-    double gain = 0.1;
+    double gain = 0.005;
     driveController.changeTargetAngle(rStickX * gain);
 
     int lStickX = inputController.roundedLStickX();

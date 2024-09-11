@@ -38,13 +38,12 @@ void DriveController::drive(int x, int y) {
   // BNO055から角度を取得
   double currentAngle = getAngle();
   double diff = currentAngle - targetAngle;
+  if (diff > 180) {
+    diff -= 360;
+  } else if (diff < -180) {
+      diff += 360;
+  }
   double gain = 0.5; // 角度補正をどのくらい影響させるか
-  Serial.print("currentAngle: ");
-  Serial.print(currentAngle);
-  Serial.print(", targetAngle: ");
-  Serial.print(targetAngle);
-  Serial.print(", diff: ");
-  Serial.println(diff);
 
   // 1:右前輪, 2:左前輪, 3:後輪
   int speed1 = (-0.5 * x) + (0.86602540378 * y) + (gain * diff);
@@ -58,7 +57,13 @@ void DriveController::drive(int x, int y) {
   ledcWrite(pwmChannel2, abs(speed2));
   ledcWrite(pwmChannel3, abs(speed3));
 
-  Serial.print("speed1: ");
+  Serial.print("currentAngle: ");
+  Serial.print(currentAngle);
+  Serial.print(", targetAngle: ");
+  Serial.print(targetAngle);
+  Serial.print(", diff: ");
+  Serial.print(diff);
+  Serial.print(", speed1: ");
   Serial.print(speed1);
   Serial.print(", speed2: ");
   Serial.print(speed2);
@@ -74,4 +79,9 @@ double DriveController::getAngle() {
 
 void DriveController::changeTargetAngle(double range) {
   targetAngle += range;
+  // 0~360度に収める
+  targetAngle = fmod(targetAngle, 360);
+  if (targetAngle < 0) {
+    targetAngle += 360;
+  }
 }
