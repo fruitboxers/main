@@ -43,7 +43,7 @@ void DriveController::drive(int x, int y) {
   } else if (diff < -180) {
       diff += 360;
   }
-  double gain = 0.5; // 角度補正をどのくらい影響させるか
+  double gain = 2; // 角度補正をどのくらい影響させるか
 
   // 1:右前輪, 2:左前輪, 3:後輪
   int speed1 = (-0.5 * x) + (0.86602540378 * y) + (gain * diff);
