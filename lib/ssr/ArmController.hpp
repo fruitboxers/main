@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 #include <ESP32Servo.h>
-#include "pins.h"
+#include "pins.hpp"
 
 class ArmController {
 private:

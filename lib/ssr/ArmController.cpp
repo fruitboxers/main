@@ -1,4 +1,4 @@
-#include "ArmController.h"
+#include "ArmController.hpp"
 
 ArmController::ArmController() {
 }

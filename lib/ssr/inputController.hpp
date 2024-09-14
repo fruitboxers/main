@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 #include <ps5Controller.h>
-#include "pins.h"
+#include "pins.hpp"
 
 class InputController {
 private:

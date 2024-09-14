@@ -1,7 +1,7 @@
 #include <Arduino.h>
-#include "DriveController.h"
-#include "ArmController.h"
-#include "InputController.h"
+#include "DriveController.hpp"
+#include "ArmController.hpp"
+#include "InputController.hpp"
 
 DriveController driveController;
 ArmController armController;

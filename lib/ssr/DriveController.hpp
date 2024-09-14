@@ -6,7 +6,7 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BNO055.h>
 #include <utility/imumaths.h>
-#include "pins.h"
+#include "pins.hpp"
 
 class DriveController {
 private:
