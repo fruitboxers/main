@@ -29,12 +29,7 @@ void DriveController::setup() {
   bno.setExtCrystalUse(true);
 }
 
-void DriveController::drive(int x, int y) {
-  Serial.print("x: ");
-  Serial.print(x);
-  Serial.print(", y: ");
-  Serial.println(y);
-
+void DriveController::drive(Vector2 vector) {
   // BNO055から角度を取得
   double currentAngle = getAngle();
   double diff = currentAngle - targetAngle;
@@ -45,10 +40,25 @@ void DriveController::drive(int x, int y) {
   }
   double gain = 2; // 角度補正をどのくらい影響させるか
 
+  if (autoDriveStage != OFF) {
+    // 自律制御がオンの時
+    AutoDriveStageInfo info = getAutoDriveInfo();
+
+    long currentAutoDriveDuration = millis() - currentAutoDriveStartTime;
+    if (currentAutoDriveDuration > info.duration) {
+      // currentAutoDriveStartTimeをリセットし、次のステージに移行
+      autoDriveStage = static_cast<AutoDriveStage>((autoDriveStage + 1) % 4);
+      currentAutoDriveStartTime = millis();
+    } else {
+      // コントローラーの入力を自律制御の情報で上書き
+      vector = info.vector;
+    }
+  }
+
   // 1:右前輪, 2:左前輪, 3:後輪
-  int speed1 = (-0.5 * x) + (0.86602540378 * y) + (gain * diff);
-  int speed2 = (-0.5 * x) - (0.86602540378 * y) + (gain * diff);
-  int speed3 = x + (gain * diff);
+  int speed1 = (-0.5 * vector.x) + (0.86602540378 * vector.y) + (gain * diff);
+  int speed2 = (-0.5 * vector.x) - (0.86602540378 * vector.y) + (gain * diff);
+  int speed3 = vector.x + (gain * diff);
 
   digitalWrite(WHEEL_MOTOR1_DIR_PIN, speed1 > 0 ? HIGH : LOW);
   digitalWrite(WHEEL_MOTOR2_DIR_PIN, speed2 > 0 ? HIGH : LOW);
@@ -56,6 +66,11 @@ void DriveController::drive(int x, int y) {
   ledcWrite(pwmChannel1, abs(speed1));
   ledcWrite(pwmChannel2, abs(speed2));
   ledcWrite(pwmChannel3, abs(speed3));
+
+  Serial.print("x: ");
+  Serial.print(vector.x);
+  Serial.print(", y: ");
+  Serial.println(vector.y);
 
   Serial.print("currentAngle: ");
   Serial.print(currentAngle);
@@ -82,5 +97,31 @@ void DriveController::changeTargetAngle(double range) {
   targetAngle = fmod(targetAngle, 360);
   if (targetAngle < 0) {
     targetAngle += 360;
+  }
+}
+
+void DriveController::startAutoDrive() {
+  Serial.println("Auto drive started");
+  autoDriveStage = FORWARD;
+}
+
+void DriveController::forceStopAutoDrive() {
+  Serial.println("Auto drive stopped");
+  autoDriveStage = OFF;
+}
+
+AutoDriveStageInfo DriveController::getAutoDriveInfo() {
+  switch (autoDriveStage) {
+    case FORWARD:
+      Serial.println("forward");
+      return {{0, 100}, 3000};
+    case RIGHT:
+      Serial.println("right");
+      return {{100, 0}, 3000};
+    case BACKWARD:
+      Serial.println("backward");
+      return {{0, -100}, 3000};
+    default:
+      return {{0, 0}, 0};
   }
 }

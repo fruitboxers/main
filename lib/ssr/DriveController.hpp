@@ -8,6 +8,18 @@
 #include <utility/imumaths.h>
 #include "pins.hpp"
 
+struct Vector2 {
+  int x;
+  int y;
+};
+
+enum AutoDriveStage { OFF, FORWARD, RIGHT, BACKWARD };
+
+struct AutoDriveStageInfo {
+  Vector2 vector;
+  long duration;
+};
+
 class DriveController {
 private:
   static constexpr int pwmChannel1 = 6;
@@ -22,12 +34,22 @@ private:
 
   double getAngle();
 
+    // 自律制御の段階
+  AutoDriveStage autoDriveStage = OFF;
+
+  long currentAutoDriveStartTime = 0;
+
+  AutoDriveStageInfo getAutoDriveInfo();
+
 public:
   DriveController();
   void setup();
   // 引数として受け取ったx,y方向の入力と9軸センサーの値を元にモーターを回す関数
-  void drive(int x, int y);
+  void drive(Vector2 vector);
   void changeTargetAngle(double range);
+
+  void startAutoDrive();
+  void forceStopAutoDrive();
 };
 
 #endif

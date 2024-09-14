@@ -39,13 +39,20 @@ void loop() {
 
     int lStickX = inputController.roundedLStickX();
     int lStickY = inputController.roundedLStickY();
-    driveController.drive(lStickX * 2, lStickY * 2);
+    driveController.drive({lStickX * 2, lStickY * 2});
 
     if (ps5.L1()) {
       Serial2.println("rotate_box_motor1");
     }
     if (ps5.R1()) {
       Serial2.println("rotate_box_motor2");
+    }
+
+    if (ps5.Square()) {
+      driveController.startAutoDrive();
+    }
+    if (ps5.Cross()) {
+      driveController.forceStopAutoDrive();
     }
   }
 }
