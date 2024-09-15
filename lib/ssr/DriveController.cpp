@@ -111,16 +111,17 @@ void DriveController::forceStopAutoDrive() {
 }
 
 AutoDriveStageInfo DriveController::getAutoDriveInfo() {
+  // TODO: もっと速度上げてもいいかも
   switch (autoDriveStage) {
     case FORWARD:
       Serial.println("forward");
-      return {{0, 100}, 3000};
+      return {{0, 100}, 1800};
     case RIGHT:
       Serial.println("right");
-      return {{100, 0}, 3000};
+      return {{100, 0}, 2500};
     case BACKWARD:
       Serial.println("backward");
-      return {{0, -100}, 3000};
+      return {{0, -100}, 15000};
     default:
       return {{0, 0}, 0};
   }
