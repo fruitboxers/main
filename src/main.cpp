@@ -30,6 +30,10 @@ void setup() {
 void loop() {
   while (ps5.isConnected() == false) {
     Serial.println("PS5 controller not found");
+
+    // 最初はピンの状態がおかしくなってる可能性があるので、
+    // コントローラー接続前からジャイロによる角度補正を働かせておく
+    driveController.drive({0, 0});
   }
 
   while (ps5.isConnected() == true) {
