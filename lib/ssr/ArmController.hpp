@@ -14,9 +14,31 @@ private:
   // パルス幅の最大値
   static constexpr int servoMaxUs = 2400;
 
+  int armSwingAngle = 90;
+
+  bool beltIsUp = true;
+
+  bool isAutoCollecting = false;
+  int autoCollectAngle = 0;
+
 public:
   ArmController();
   void setup();
+  void loop();
+
+  void moveBelt(bool isUp);
+  void stopBelt();
+  void openArm();
+  void closeArm();
+  void swingArmToLeft();
+  void swingArmToRight();
+  void resetArmSwing();
+
+  void startAutoCollect(int angle);
+  void forceStopAutoCollect();
+
+  bool leftIsPressed = false;
+  bool rightIsPressed = false;
 };
 
 #endif
