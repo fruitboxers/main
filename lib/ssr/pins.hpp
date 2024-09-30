@@ -14,8 +14,8 @@
 #define BNO055_SCL_PIN 22
 #define ARM_SERVO1_PIN 4
 #define ARM_SERVO2_PIN 5
-#define BELT_MOTOR_DIR_PIN 19
-#define BELT_MOTOR_PWM_PIN 18
+#define BELT_MOTOR_DIR_PIN 12
+#define BELT_MOTOR_PWM_PIN 19
 #define SWITCH_PIN 23
 
 #endif
