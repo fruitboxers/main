@@ -37,6 +37,7 @@ void DriveController::drive(Vector2 vector) {
       diff += 360;
   }
   double gain = 2; // 角度補正をどのくらい影響させるか
+  double radiusRatio = 1.2; // 中心から前輪までの距離に対する、中心から後輪までの距離の比
 
   if (autoDriveStage != OFF) {
     // 自律制御がオンの時
@@ -56,7 +57,7 @@ void DriveController::drive(Vector2 vector) {
   // 1:右前輪, 2:左前輪, 3:後輪
   int speed1 = (-0.5 * vector.x) + (0.86602540378 * vector.y) + (gain * diff);
   int speed2 = (-0.5 * vector.x) - (0.86602540378 * vector.y) + (gain * diff);
-  int speed3 = vector.x + (gain * diff);
+  int speed3 = vector.x + (gain * radiusRatio * diff);
 
   digitalWrite(WHEEL_MOTOR1_DIR_PIN, speed1 > 0 ? HIGH : LOW);
   digitalWrite(WHEEL_MOTOR2_DIR_PIN, speed2 > 0 ? HIGH : LOW);
