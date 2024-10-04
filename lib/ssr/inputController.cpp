@@ -1,9 +1,6 @@
 #include "inputController.hpp"
 
 InputController::InputController() {
-}
-
-void InputController::setup() {
   ps5.begin("e8:47:3a:8d:36:9a");
 }
 

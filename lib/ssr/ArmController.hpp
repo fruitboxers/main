@@ -23,7 +23,6 @@ private:
 
 public:
   ArmController();
-  void setup();
   void loop();
 
   void moveBelt(bool isUp);

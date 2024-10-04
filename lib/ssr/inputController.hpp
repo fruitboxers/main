@@ -11,7 +11,6 @@ private:
 
 public:
   InputController();
-  void setup();
 
   int roundedLStickX();
   int roundedLStickY();

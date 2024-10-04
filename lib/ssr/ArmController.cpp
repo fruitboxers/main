@@ -1,9 +1,6 @@
 #include "ArmController.hpp"
 
 ArmController::ArmController() {
-}
-
-void ArmController::setup() {
   // サーボの設定
   servo1.setPeriodHertz(50);
   servo2.setPeriodHertz(50);

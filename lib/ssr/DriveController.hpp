@@ -43,7 +43,7 @@ private:
 
 public:
   DriveController();
-  void setup();
+  
   // 引数として受け取ったx,y方向の入力と9軸センサーの値を元にモーターを回す関数
   void drive(Vector2 vector);
   void changeTargetAngle(double range);

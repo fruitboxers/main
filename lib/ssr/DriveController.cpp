@@ -1,9 +1,6 @@
 #include "DriveController.hpp"
 
 DriveController::DriveController() {
-}
-
-void DriveController::setup() {
   // モーター類の設定
   pinMode(WHEEL_MOTOR1_PWM_PIN, OUTPUT);
   pinMode(WHEEL_MOTOR1_DIR_PIN, OUTPUT);
