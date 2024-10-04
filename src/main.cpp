@@ -40,29 +40,28 @@ void loop() {
   }
 
   while (ps5.isConnected() == true) {
+    // 右スティックで回転
     int rStickX = inputController->roundedRStickX();
     double gain = 0.005;
     driveController->changeTargetAngle(rStickX * gain);
 
+    // 左スティックで並行移動
     int lStickX = inputController->roundedLStickX();
     int lStickY = inputController->roundedLStickY();
     driveController->drive({lStickX * 2, lStickY * 2});
 
-    if (ps5.L1()) {
-      if (!l1IsPressed) {
-        Serial2.println("motor1");
-        Serial.println("send motor1");
-        //delay(20);
-        l1IsPressed = true;
-      }
+    // L1、R1を押すと子機経由で射出機構が動く
+    if (ps5.L1() && !l1IsPressed) {
+      Serial2.println("motor1");
+      Serial.println("send motor1");
+      //delay(20);
+      l1IsPressed = true;
     }
-    if (ps5.R1()) {
-      if (!r1IsPressed) {
-        Serial2.println("motor2");
-        Serial.println("send motor2");
-        //delay(20);
-        r1IsPressed = true;
-      }
+    if (ps5.R1() && !r1IsPressed) {
+      Serial2.println("motor2");
+      Serial.println("send motor2");
+      //delay(20);
+      r1IsPressed = true;
     }
     if (!ps5.L1() && l1IsPressed) {
       l1IsPressed = false;
@@ -71,6 +70,7 @@ void loop() {
       r1IsPressed = false;
     }
 
+    // 丸、三角ボタンでアームの開閉
     if (ps5.Circle()) {
       armController->openArm();
     }
@@ -78,15 +78,20 @@ void loop() {
       armController->closeArm();
       armController->resetArmSwing();
     }
+
+    // 四角ボタンで自律走行開始
     if (ps5.Square()) {
       driveController->startAutoDrive();
     }
+
+    // バツボタンで自律走行停止、昇降機構停止、自動回収停止
     if (ps5.Cross()) {
       driveController->forceStopAutoDrive();
       armController->stopBelt();
       armController->forceStopAutoCollect();
     }
 
+    // 上下ボタンでアームの上下（昇降機構）
     if (ps5.Up()) {
       armController->moveBelt(true);
     }
@@ -94,13 +99,13 @@ void loop() {
       armController->moveBelt(false);
     }
 
+    // 左右ボタンでアームの首振り
     if (ps5.Left()) {
       armController->swingArmToLeft();
     }
     if (ps5.Right()) {
       armController->swingArmToRight();
     }
-
     if (!ps5.Left() && armController->leftIsPressed) {
       armController->leftIsPressed = false;
     }
@@ -110,6 +115,7 @@ void loop() {
 
     armController->loop();
 
+    // シェア、オプションボタンで左右それぞれに格納する自動回収を開始
     if (ps5.Share()) {
       armController->startAutoCollect(0);
     }
