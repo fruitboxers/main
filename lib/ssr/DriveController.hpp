@@ -30,6 +30,10 @@ private:
 
   double targetAngle = 0;
 
+  // PID制御用の変数
+  double errorSum, preError = 0;
+  double PID(double error, double pGain, double iGain, double dGain);
+
   Adafruit_BNO055 bno = Adafruit_BNO055(-1, 0x28, &Wire);
 
   double getAngle();

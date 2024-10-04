@@ -27,17 +27,22 @@ DriveController::DriveController() {
   bno.setExtCrystalUse(true);
 }
 
+double DriveController::PID(double error, double pGain, double iGain, double dGain) {
+  if (error > 180) {
+    error -= 360;
+  } else if (error < -180) {
+      error += 360;
+  }
+  errorSum += error;
+  double errorDiff = error - preError;
+  preError = error;
+  return (pGain * error) + (iGain * errorSum) + (dGain * errorDiff);
+}
+
 void DriveController::drive(Vector2 vector) {
   // BNO055から角度を取得
   double currentAngle = getAngle();
-  double diff = currentAngle - targetAngle;
-  if (diff > 180) {
-    diff -= 360;
-  } else if (diff < -180) {
-      diff += 360;
-  }
-  double gain = 2; // 角度補正をどのくらい影響させるか
-  double radiusRatio = 1.2; // 中心から前輪までの距離に対する、中心から後輪までの距離の比
+  double rotateSpeed = PID(targetAngle - currentAngle, 2, 0.01, 0.1);
 
   if (autoDriveStage != OFF) {
     // 自律制御がオンの時
@@ -54,10 +59,12 @@ void DriveController::drive(Vector2 vector) {
     }
   }
 
+  double radiusRatio = 1.2; // 中心から前輪までの距離に対する、中心から後輪までの距離の比
+
   // 1:右前輪, 2:左前輪, 3:後輪
-  int speed1 = (-0.5 * vector.x) + (0.86602540378 * vector.y) + (gain * diff);
-  int speed2 = (-0.5 * vector.x) - (0.86602540378 * vector.y) + (gain * diff);
-  int speed3 = vector.x + (gain * radiusRatio * diff);
+  int speed1 = (-0.5 * vector.x) + (0.86602540378 * vector.y) + rotateSpeed;
+  int speed2 = (-0.5 * vector.x) - (0.86602540378 * vector.y) + rotateSpeed;
+  int speed3 = vector.x + (rotateSpeed * radiusRatio);
 
   digitalWrite(WHEEL_MOTOR1_DIR_PIN, speed1 > 0 ? HIGH : LOW);
   digitalWrite(WHEEL_MOTOR2_DIR_PIN, speed2 > 0 ? HIGH : LOW);
@@ -75,8 +82,8 @@ void DriveController::drive(Vector2 vector) {
   Serial.print(currentAngle);
   Serial.print(", targetAngle: ");
   Serial.print(targetAngle);
-  Serial.print(", diff: ");
-  Serial.print(diff);
+  Serial.print(", rotateSpeed: ");
+  Serial.print(rotateSpeed);
   Serial.print(", speed1: ");
   Serial.print(speed1);
   Serial.print(", speed2: ");
