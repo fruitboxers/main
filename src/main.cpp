@@ -76,7 +76,6 @@ void loop() {
     }
     if (ps5.Triangle()) {
       armController->closeArm();
-      armController->resetArmSwing();
     }
 
     // 四角ボタンで自律走行開始

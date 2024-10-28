@@ -106,10 +106,6 @@ void ArmController::swingArmToRight() {
   }
 }
 
-void ArmController::resetArmSwing() {
-  //servo2.write(90);
-}
-
 void ArmController::startAutoCollect(int angle) {
   isAutoCollecting = true;
   autoCollectAngle = angle;

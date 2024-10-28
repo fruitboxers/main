@@ -31,7 +31,6 @@ public:
   void closeArm();
   void swingArmToLeft();
   void swingArmToRight();
-  void resetArmSwing();
 
   void startAutoCollect(int angle);
   void forceStopAutoCollect();
