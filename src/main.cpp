@@ -112,7 +112,7 @@ void loop() {
       armController->rightIsPressed = false;
     }
 
-    armController->loop();
+    armController->observeBeltState();
 
     // シェア、オプションボタンで左右それぞれに格納する自動回収を開始
     if (ps5.Share()) {

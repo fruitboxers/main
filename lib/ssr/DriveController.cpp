@@ -42,7 +42,7 @@ double DriveController::PID(double error, double pGain, double iGain, double dGa
 void DriveController::drive(Vector2 vector) {
   // BNO055から角度を取得
   double currentAngle = getAngle();
-  double rotateSpeed = PID(targetAngle - currentAngle, 2, 0.01, 0.1);
+  double rotateSpeed = -1 * PID(targetAngle - currentAngle, 2, 0.01, 0.1);
 
   if (autoDriveStage != OFF) {
     // 自律制御がオンの時
