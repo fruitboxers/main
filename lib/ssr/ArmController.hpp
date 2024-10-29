@@ -19,7 +19,6 @@ private:
   // ベルトが上昇中かどうか
   bool beltIsUp = true;
 
-  // bool isAutoCollecting = false;
   int autoCollectAngle = 0;
   TaskHandle_t autoCollectHandle;
 

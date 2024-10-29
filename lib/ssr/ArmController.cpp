@@ -107,7 +107,6 @@ void ArmController::swingArmToRight() {
 }
 
 void ArmController::startAutoCollect(int angle) {
-  // isAutoCollecting = true;
   autoCollectAngle = angle;
   xTaskCreateUniversal(autoCollectTask, "autoCollect", 4096, this, 0, &autoCollectHandle, APP_CPU_NUM);
 }
