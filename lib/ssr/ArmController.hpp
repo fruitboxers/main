@@ -16,22 +16,24 @@ private:
 
   int armSwingAngle = 90;
 
+  // ベルトが上昇中かどうか
   bool beltIsUp = true;
 
-  bool isAutoCollecting = false;
   int autoCollectAngle = 0;
+  TaskHandle_t autoCollectHandle;
+
+  friend void autoCollectTask(void *pvParameters);
 
 public:
   ArmController();
-  void loop();
 
+  void observeBeltState();
   void moveBelt(bool isUp);
   void stopBelt();
   void openArm();
   void closeArm();
   void swingArmToLeft();
   void swingArmToRight();
-  void resetArmSwing();
 
   void startAutoCollect(int angle);
   void forceStopAutoCollect();

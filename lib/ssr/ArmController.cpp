@@ -37,41 +37,41 @@ void ArmController::stopBelt() {
   analogWrite(BELT_MOTOR_PWM_PIN, 0);
 }
 
-void ArmController::loop() {
+void ArmController::observeBeltState() {
   bool switchIsPressed = digitalRead(SWITCH_PIN) == HIGH;
   if (beltIsUp && switchIsPressed) {
     stopBelt();
   }
+}
 
-  // 自動回収中の処理
-  if (isAutoCollecting) {
-    if (!switchIsPressed) {
-      // 上まで上がりきってなかったら上昇させる
-      moveBelt(true);
-    } else if (armSwingAngle != autoCollectAngle) {
-      // 首振り角度が目標角度と違ったら回転させる
-      armSwingAngle = autoCollectAngle;
-      servo2.write(armSwingAngle);
-      delay(500);
-    // } else {
-      // 上記の条件が全て揃っていたら、アームを開いてボールをboxに入れる
-      servo1.write(120);
-      delay(1000);
-      servo1.write(175);
-      delay(500);
-      // 首振りの向きを真ん中に戻す
-      servo2.write(90);
-      armSwingAngle = 90;
-      delay(500);
-      // ベルト下降
-      moveBelt(false);
-      delay(1500);
-      servo1.write(120);
-      delay(1500);
-      stopBelt();
-      isAutoCollecting = false;
-    }
+void autoCollectTask(void *pvParameters) {
+  ArmController *aC = static_cast<ArmController*>(pvParameters);
+
+  while (digitalRead(SWITCH_PIN) == LOW) {
+    // 上まで上がりきってなかったら上昇させる
+    aC->moveBelt(true);
   }
+
+  aC->armSwingAngle = aC->autoCollectAngle;
+  aC->servo2.write(aC->armSwingAngle);
+  delay(500);
+  // アームを開いてボールをboxに入れる
+  aC->servo1.write(120);
+  delay(1000);
+  aC->servo1.write(175);
+  delay(500);
+  // 首振りの向きを真ん中に戻す
+  aC->servo2.write(90);
+  aC->armSwingAngle = 90;
+  delay(500);
+  // ベルト下降
+  aC->moveBelt(false);
+  delay(1500);
+  aC->servo1.write(120);
+  delay(1500);
+  aC->stopBelt();
+
+  vTaskDelete(NULL);
 }
 
 void ArmController::openArm() {
@@ -106,18 +106,15 @@ void ArmController::swingArmToRight() {
   }
 }
 
-void ArmController::resetArmSwing() {
-  //servo2.write(90);
-}
-
 void ArmController::startAutoCollect(int angle) {
-  isAutoCollecting = true;
   autoCollectAngle = angle;
+  xTaskCreateUniversal(autoCollectTask, "autoCollect", 4096, this, 0, &autoCollectHandle, APP_CPU_NUM);
 }
 
 void ArmController::forceStopAutoCollect() {
+  bool isAutoCollecting = eTaskGetState(autoCollectHandle) != eDeleted;
   if (isAutoCollecting) {
     stopBelt();
   }
-  isAutoCollecting = false;
+  vTaskDelete(autoCollectHandle);
 }
